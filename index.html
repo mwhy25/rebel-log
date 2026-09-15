@@ -516,36 +516,36 @@
   </div>
 
   <div class="arcana-grid">
-    <div class="arcana-card">
+    <div class="arcana-card" data-category="shorts">
       <div class="arcana-icon">🎬</div>
       <div class="arcana-name">Magician</div>
-      <div class="arcana-count">24<small> shorts</small></div>
-      <div class="rank-bar"><div class="rank-fill" style="width:70%"></div></div>
-      <div class="rank-label"><span>Rank 7</span><span>YouTube Shorts</span></div>
+      <div class="arcana-count"><span class="count-num">0</span><small> shorts</small></div>
+      <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
+      <div class="rank-label"><span class="rank-num">Rank 0</span><span>YouTube Shorts</span></div>
     </div>
 
-    <div class="arcana-card">
+    <div class="arcana-card" data-category="creator">
       <div class="arcana-icon">🤖</div>
       <div class="arcana-name">Devil</div>
-      <div class="arcana-count">12<small> videos</small></div>
-      <div class="rank-bar"><div class="rank-fill" style="width:45%"></div></div>
-      <div class="rank-label"><span>Rank 4</span><span>AI Content Creator</span></div>
+      <div class="arcana-count"><span class="count-num">0</span><small> videos</small></div>
+      <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
+      <div class="rank-label"><span class="rank-num">Rank 0</span><span>AI Content Creator</span></div>
     </div>
 
-    <div class="arcana-card">
+    <div class="arcana-card" data-category="edukasi">
       <div class="arcana-icon">📚</div>
       <div class="arcana-name">Priestess</div>
-      <div class="arcana-count">9<small> episode</small></div>
-      <div class="rank-bar"><div class="rank-fill" style="width:55%"></div></div>
-      <div class="rank-label"><span>Rank 5</span><span>AI Educational</span></div>
+      <div class="arcana-count"><span class="count-num">0</span><small> episode</small></div>
+      <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
+      <div class="rank-label"><span class="rank-num">Rank 0</span><span>AI Educational</span></div>
     </div>
 
-    <div class="arcana-card">
+    <div class="arcana-card" data-category="novel">
       <div class="arcana-icon">📖</div>
       <div class="arcana-name">Hermit</div>
-      <div class="arcana-count">3<small> bab</small></div>
-      <div class="rank-bar"><div class="rank-fill" style="width:30%"></div></div>
-      <div class="rank-label"><span>Rank 3</span><span>AI Novel</span></div>
+      <div class="arcana-count"><span class="count-num">0</span><small> bab</small></div>
+      <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
+      <div class="rank-label"><span class="rank-num">Rank 0</span><span>AI Novel</span></div>
     </div>
   </div>
 </section>
@@ -610,50 +610,16 @@
     </div>
   </div>
 
-  <div class="filter-row">
-    <button class="filter-btn active">Semua</button>
-    <button class="filter-btn">Shorts</button>
-    <button class="filter-btn">AI Creator</button>
-    <button class="filter-btn">Edukasi</button>
-    <button class="filter-btn">Novel</button>
+  <div class="filter-row" id="filterRow">
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="shorts">Shorts</button>
+    <button class="filter-btn" data-filter="creator">AI Creator</button>
+    <button class="filter-btn" data-filter="edukasi">Edukasi</button>
+    <button class="filter-btn" data-filter="novel">Novel</button>
   </div>
 
-  <div class="content-grid">
-    <div class="content-card">
-      <div class="thumb">▶</div>
-      <div class="content-body">
-        <div class="content-cat">YouTube Shorts</div>
-        <div class="content-title">5 Fakta Aneh Luar Angkasa</div>
-        <div class="content-date">15 September 2026</div>
-      </div>
-    </div>
-
-    <div class="content-card">
-      <div class="thumb">▶</div>
-      <div class="content-body">
-        <div class="content-cat">AI Content Creator</div>
-        <div class="content-title">Nova — Episode 12: Studio Malam</div>
-        <div class="content-date">12 September 2026</div>
-      </div>
-    </div>
-
-    <div class="content-card">
-      <div class="thumb">▶</div>
-      <div class="content-body">
-        <div class="content-cat">Video Edukasi</div>
-        <div class="content-title">Cara Kerja Lubang Hitam</div>
-        <div class="content-date">13 September 2026</div>
-      </div>
-    </div>
-
-    <div class="content-card">
-      <div class="thumb">📖</div>
-      <div class="content-body">
-        <div class="content-cat">Novel AI</div>
-        <div class="content-title">Bayang di Balik Kota — Bab 4</div>
-        <div class="content-date">14 September 2026</div>
-      </div>
-    </div>
+  <div class="content-grid" id="contentGrid">
+    <p style="color:var(--gray); font-size:0.9rem;">Memuat karya...</p>
   </div>
 </section>
 
@@ -665,8 +631,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ==== GANTI DUA BARIS INI DENGAN DATA SUPABASE PROJECT KAMU (sama seperti di admin.html) ====
-  const SUPABASE_URL = "https://eedmzlmqenrcmbdvtgwq.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlZG16bG1xZW5yY21iZHZ0Z3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NTMxMzUsImV4cCI6MjEwNTAyOTEzNX0.pCI1bqdjYOzSotgXibioWll_vWpLmObOFmKpFn0iyVM";
+  const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";
+  const SUPABASE_KEY = "isi-anon-public-key-di-sini";
   // =============================================================================================
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -690,21 +656,96 @@
     return d.getDate() + ' ' + bulan[d.getMonth()];
   }
 
+  const CATEGORY_CARD_LABEL = {
+    shorts: 'YouTube Shorts',
+    creator: 'AI Content Creator',
+    edukasi: 'Video Edukasi',
+    novel: 'Novel AI'
+  };
+  const CATEGORY_ICON = {
+    shorts: '▶',
+    creator: '▶',
+    edukasi: '▶',
+    novel: '📖'
+  };
+
+  let allLogs = [];
+  let activeFilter = 'all';
+
+  function formatDateLong(iso){
+    const d = new Date(iso + 'T00:00:00');
+    const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return d.getDate() + ' ' + bulan[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function renderStats(data){
+    const counts = { shorts: 0, creator: 0, edukasi: 0, novel: 0 };
+    data.forEach(item => {
+      if(counts[item.kategori] !== undefined) counts[item.kategori]++;
+    });
+
+    document.querySelectorAll('.arcana-card').forEach(card => {
+      const cat = card.getAttribute('data-category');
+      const count = counts[cat] || 0;
+      const rank = Math.min(9, Math.floor(count / 3));
+      const pct = Math.round((rank / 9) * 100);
+
+      card.querySelector('.count-num').textContent = count;
+      card.querySelector('.rank-num').textContent = 'Rank ' + rank;
+      card.querySelector('.rank-fill').style.width = pct + '%';
+    });
+  }
+
+  function renderContentGrid(){
+    const grid = document.getElementById('contentGrid');
+    const filtered = activeFilter === 'all'
+      ? allLogs
+      : allLogs.filter(item => item.kategori === activeFilter);
+
+    if(filtered.length === 0){
+      grid.innerHTML = '<p style="color:var(--gray); font-size:0.9rem;">Belum ada karya di kategori ini.</p>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(item => `
+      <div class="content-card">
+        <div class="thumb">${CATEGORY_ICON[item.kategori] || '▶'}</div>
+        <div class="content-body">
+          <div class="content-cat">${CATEGORY_CARD_LABEL[item.kategori] || item.kategori}</div>
+          <div class="content-title">${item.judul}</div>
+          <div class="content-date">${formatDateLong(item.tanggal)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('filterRow').addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if(!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.getAttribute('data-filter');
+    renderContentGrid();
+  });
+
   async function loadLogs(){
     const { data, error } = await supabase
       .from('logs')
       .select('*')
       .order('tanggal', { ascending: false })
-      .limit(20);
+      .limit(100);
 
     const logList = document.getElementById('logList');
 
     if(error || !data || data.length === 0){
       logList.innerHTML = '<p style="color:var(--gray); font-size:0.9rem; padding:1rem 0;">Belum ada log. Isi lewat halaman admin.html</p>';
+      document.getElementById('contentGrid').innerHTML = '<p style="color:var(--gray); font-size:0.9rem;">Belum ada karya.</p>';
       return;
     }
 
-    logList.innerHTML = data.map(item => `
+    allLogs = data;
+
+    logList.innerHTML = data.slice(0, 20).map(item => `
       <div class="log-entry">
         <div class="log-date">${formatDateShort(item.tanggal)}</div>
         <div class="log-info">
@@ -716,6 +757,8 @@
     `).join('');
 
     markCalendarDays(data);
+    renderStats(data);
+    renderContentGrid();
   }
 
   function buildCalendar(){
