@@ -195,6 +195,8 @@
   // ==== GANTI DUA BARIS INI DENGAN DATA SUPABASE PROJECT KAMU ====
   const SUPABASE_URL = "https://eedmzlmqenrcmbdvtgwq.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlZG16bG1xZW5yY21iZHZ0Z3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NTMxMzUsImV4cCI6MjEwNTAyOTEzNX0.pCI1bqdjYOzSotgXibioWll_vWpLmObOFmKpFn0iyVM";
+  
+
 
   // ================================================================
 
@@ -214,7 +216,7 @@
     const { data, error } = await supabase
       .from('logs')
       .select('*')
-      .order('tanggal', { ascending: false })
+      .order('date', { ascending: false })
       .limit(8);
 
     if(error){
@@ -231,7 +233,7 @@
       <div class="row">
         <div class="info">
           <div class="title">${item.judul}</div>
-          <div class="meta">${item.tanggal} · ${item.kategori}</div>
+          <div class="meta">${item.date} · ${item.kategori}</div>
         </div>
         <button onclick="deleteLog(${item.id})">Hapus</button>
       </div>
@@ -247,12 +249,12 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const tanggal = document.getElementById('f-date').value;
+    const date = document.getElementById('f-date').value;
     const judul = document.getElementById('f-title').value.trim();
     const kategori = document.getElementById('f-category').value;
     const catatan = document.getElementById('f-note').value.trim();
 
-    if(!tanggal || !judul || !kategori){
+    if(!date || !judul || !kategori){
       showMsg('Lengkapi tanggal, judul, dan kategori dulu.', 'err');
       return;
     }
@@ -261,7 +263,7 @@
     submitBtn.textContent = 'Menyimpan...';
 
     const { error } = await supabase.from('logs').insert([
-      { tanggal, judul, kategori, catatan }
+      { date, judul, kategori, catatan }
     ]);
 
     submitBtn.disabled = false;

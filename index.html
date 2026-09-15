@@ -713,7 +713,7 @@
         <div class="content-body">
           <div class="content-cat">${CATEGORY_CARD_LABEL[item.kategori] || item.kategori}</div>
           <div class="content-title">${item.judul}</div>
-          <div class="content-date">${formatDateLong(item.tanggal)}</div>
+          <div class="content-date">${formatDateLong(item.date)}</div>
         </div>
       </div>
     `).join('');
@@ -732,7 +732,7 @@
     const { data, error } = await supabase
       .from('logs')
       .select('*')
-      .order('tanggal', { ascending: false })
+      .order('date', { ascending: false })
       .limit(100);
 
     const logList = document.getElementById('logList');
@@ -747,7 +747,7 @@
 
     logList.innerHTML = data.slice(0, 20).map(item => `
       <div class="log-entry">
-        <div class="log-date">${formatDateShort(item.tanggal)}</div>
+        <div class="log-date">${formatDateShort(item.date)}</div>
         <div class="log-info">
           <div class="log-title">${item.judul}</div>
           <div class="log-meta">${item.catatan || ''}</div>
@@ -790,7 +790,7 @@
 
   function markCalendarDays(data){
     data.forEach(item => {
-      const day = parseInt(item.tanggal.split('-')[2], 10);
+      const day = parseInt(item.date.split('-')[2], 10);
       const cell = document.querySelector('.cal-day[data-day="' + day + '"]');
       if(cell){
         cell.classList.add('active');
