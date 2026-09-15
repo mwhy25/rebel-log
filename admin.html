@@ -195,12 +195,10 @@
   // ==== GANTI DUA BARIS INI DENGAN DATA SUPABASE PROJECT KAMU ====
   const SUPABASE_URL = "https://eedmzlmqenrcmbdvtgwq.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlZG16bG1xZW5yY21iZHZ0Z3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NTMxMzUsImV4cCI6MjEwNTAyOTEzNX0.pCI1bqdjYOzSotgXibioWll_vWpLmObOFmKpFn0iyVM";
-  
-
-
+ 
   // ================================================================
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const form = document.getElementById('logForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -213,7 +211,7 @@
   }
 
   async function loadRecent(){
-    const { data, error } = await supabase
+    const { data, error } = await sb
       .from('logs')
       .select('*')
       .order('date', { ascending: false })
@@ -241,7 +239,7 @@
   }
 
   async function deleteLog(id){
-    const { error } = await supabase.from('logs').delete().eq('id', id);
+    const { error } = await sb.from('logs').delete().eq('id', id);
     if(!error) loadRecent();
   }
   window.deleteLog = deleteLog;
@@ -262,7 +260,7 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Menyimpan...';
 
-    const { error } = await supabase.from('logs').insert([
+    const { error } = await sb.from('logs').insert([
       { date, judul, kategori, catatan }
     ]);
 
