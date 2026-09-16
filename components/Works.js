@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { CATEGORY_LABEL, CATEGORY_ICON, formatDateLong } from '../lib/categories';
+import Link from 'next/link';
+import { CATEGORY_LABEL, formatDateLong } from '../lib/categories';
+import Thumbnail from './Thumbnail';
 
 const FILTERS = [
   { key: 'all', label: 'Semua' },
@@ -44,14 +46,19 @@ export default function Works({ logs }) {
         )}
 
         {filtered.map((item) => (
-          <div className="content-card" key={item.id}>
-            <div className="thumb">{CATEGORY_ICON[item.kategori] || '▶'}</div>
+          <Link
+            href={`/karya/${item.kategori}/${item.id}`}
+            className="content-card"
+            key={item.id}
+            style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+          >
+            <Thumbnail url={item.url_thumbnail} kategori={item.kategori} />
             <div className="content-body">
               <div className="content-cat">{CATEGORY_LABEL[item.kategori] || item.kategori}</div>
               <div className="content-title">{item.judul}</div>
               <div className="content-date">{formatDateLong(item.date)}</div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

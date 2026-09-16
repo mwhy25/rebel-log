@@ -9,21 +9,26 @@ app/
   page.js         -> halaman utama (/), merakit semua komponen
   admin/page.js   -> halaman admin (/admin), dibungkus AdminGate
   api/check-password/route.js -> cek password admin di server
+  karya/[id]/page.js -> halaman detail per karya
   layout.js       -> kerangka HTML dasar
   globals.css     -> semua styling visual
 components/
   Navbar.js       -> menu navigasi atas
   Hero.js         -> judul besar di awal halaman
-  Stats.js        -> kartu "Confidant Status" (4 kategori)
+  Stats.js        -> kartu "Confidant Status", streak, dan grafik mingguan
+  WeeklyChart.js  -> grafik batang aktivitas 8 minggu terakhir
   Diary.js        -> daftar log harian
   Calendar.js     -> kalender bulanan dengan navigasi
-  Works.js        -> grid hasil karya + filter kategori
+  Works.js        -> grid hasil karya + filter kategori, kartu bisa diklik
+  Thumbnail.js    -> thumbnail cerdas (YouTube/gambar/ikon) untuk kartu karya
+  MediaPlayer.js  -> embed video/gambar penuh untuk halaman detail
   Footer.js       -> footer
   AdminGate.js    -> form login sebelum admin bisa diakses
-  AdminForm.js    -> form input log (isi asli halaman admin)
+  AdminForm.js    -> form tambah & edit log (isi asli halaman admin)
 lib/
   supabase.js     -> koneksi ke Supabase (satu tempat, dipakai di semua file)
-  categories.js   -> label, warna, dan format tanggal kategori
+  categories.js   -> label, format tanggal, dan hitung streak
+  media.js        -> deteksi jenis link (YouTube / gambar)
 ```
 
 Kalau mau ubah tampilan salah satu bagian, buka file komponennya saja di atas.
@@ -81,6 +86,28 @@ Buka http://localhost:3000 di browser.
 Setelah selesai, situs online di alamat seperti `nama-project.vercel.app`,
 dan halaman admin ada di `nama-project.vercel.app/admin`.
 
+## Kolom tabel `logs` di Supabase
+
+Pastikan tabel `logs` di Supabase punya kolom-kolom berikut:
+
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| id | int8 | primary key, auto increment |
+| date | date | tanggal konten |
+| judul | text | judul konten |
+| kategori | text | shorts / creator / edukasi / novel |
+| catatan | text | catatan singkat versi lama (masih dipakai sebagai fallback) |
+| catatan_html | text | isi lengkap hasil editor WYSIWYG |
+| url_thumbnail | text | link YouTube atau link gambar langsung (opsional) |
+| url_link | text | link referensi tunggal, misal YouTube/Instagram (opsional) |
+| tags | text[] | array tag bebas, misal {sains,komedi} (opsional) |
+
+Plus dua tabel baru: `comments` dan `reactions`. Jalankan file
+`setup-fitur-baru.sql` yang disertakan di paket ini lewat Supabase SQL Editor
+untuk membuat semuanya sekaligus (aman dijalankan berkali-kali, tidak akan
+error kalau kolom/tabel sudah ada). Untuk kolom `tags`, jalankan juga file
+`setup-tags.sql`.
+
 ## Cara menambah konten baru sehari-hari
 
 Cukup buka `/admin` di website yang sudah online, isi form, klik simpan.
@@ -91,3 +118,87 @@ Tidak perlu edit kode atau upload ulang apapun.
 Semua warna dan style ada di `app/globals.css`. Struktur tiap bagian ada di
 folder `components/`. Edit file yang relevan saja, simpan, lalu upload ulang
 ke GitHub — Vercel otomatis re-deploy dalam waktu singkat.
+
+## Fitur tambahan
+
+### Edit log
+Di halaman `/admin`, klik tombol "Edit" pada log manapun di daftar "Log
+tersimpan terbaru". Form di atas otomatis terisi data log tersebut — ubah
+yang perlu, klik "Update log". Klik "Batal" untuk kembali ke mode tambah baru.
+
+### Halaman detail per karya
+Setiap kartu di "Hasil Karya" sekarang bisa diklik, menuju halaman
+`/karya/[id]` yang menampilkan video (embed YouTube), gambar penuh, atau
+catatan lengkap (misalnya isi novel) tergantung apa yang diisi di form admin.
+
+### Streak dan grafik mingguan
+Bagian "Confidant Status" sekarang menampilkan:
+- Badge "🔥 X hari beruntun" kalau kamu aktif mengisi log berturut-turut
+- Grafik batang jumlah konten per minggu, 8 minggu terakhir
+
+### Thumbnail di samping (layout horizontal)
+Kartu di "Hasil Karya" sekarang menampilkan thumbnail di sisi kiri dan info
+di kanan (menyesuaikan otomatis jadi vertikal di layar HP kecil).
+
+### Editor WYSIWYG (Tiptap)
+Field "Catatan / isi lengkap" di form admin sekarang berupa editor visual —
+bisa bold, italic, heading, list, kutipan, dan link, tanpa perlu menulis kode
+HTML manual. Hasilnya otomatis dirender rapi di halaman detail.
+
+### Link referensi
+Field "Link referensi" di form admin untuk satu link tujuan (YouTube,
+Instagram, dll). Muncul sebagai tombol "Lihat Sumber Asli" di halaman detail.
+
+### Share dan Like/Dislike
+Di halaman detail ada tombol Bagikan (pakai share native HP, atau copy link
+di desktop) dan tombol like/dislike yang tersimpan permanen di Supabase.
+Satu pengunjung (dikenali lewat ID anonim di browser) hanya bisa memilih
+salah satu reaksi per karya.
+
+### Activity Diary dengan preview WYSIWYG
+Diary di halaman utama sekarang menampilkan judul + preview isi (hasil format
+dari editor WYSIWYG), dibatasi maksimal 1000 karakter. Kalau isi lebih
+panjang, muncul link "See more" menuju halaman detail lengkap.
+
+### Routing berdasar kategori
+URL halaman detail sekarang mengikuti kategori kontennya:
+`/karya/[kategori]/[id]` — misalnya `/karya/novel/12` atau `/karya/shorts/5`.
+
+### Tags
+Field baru "Tags" di form admin (pisahkan dengan koma, contoh:
+`sains, komedi, tutorial`). Tampil sebagai pill kecil di halaman detail.
+
+### Halaman detail full-responsive
+Halaman detail sekarang pakai layout dua kolom di layar lebar (desktop):
+konten utama di kiri, kotak like/dislike + share yang menempel (sticky) di
+kanan. Di tablet/HP otomatis berubah jadi satu kolom penuh.
+
+### Gambar karakter di Hero
+Bagian hero (judul besar di awal halaman) sekarang punya slot gambar di sisi
+kanan. Taruh file gambar (PNG dengan background transparan disarankan) di
+`public/hero-character.png` — Next.js otomatis membacanya lewat path
+`/hero-character.png` yang sudah diatur di `components/Hero.js`.
+
+Kalau nama file atau formatnya beda, ubah baris `src="/hero-character.png"`
+di `components/Hero.js` supaya sesuai.
+
+### Komentar (2 tab)
+Ada dua cara berkomentar di halaman detail:
+- **Komentar Website** — tersimpan langsung ke tabel `comments` di Supabase,
+  cukup isi nama dan pesan, tidak perlu login apapun.
+- **Komentar via Google** — memakai widget gratis [Giscus](https://giscus.app),
+  pengunjung login pakai akun Google (lewat GitHub) untuk berkomentar.
+
+  **Cara setup Giscus (sekali saja):**
+  1. Buat repository baru di GitHub, khusus untuk komentar (boleh dikosongkan, publik)
+  2. Di repo itu, aktifkan **Discussions** lewat Settings > Features
+  3. Install app **giscus** dari https://github.com/apps/giscus ke repo tersebut
+  4. Buka https://giscus.app, isi nama repo kamu di form yang tersedia,
+     nanti muncul potongan kode berisi `data-repo-id` dan `data-category-id`
+  5. Salin nilai-nilai itu ke `.env.local` dan Environment Variables Vercel:
+     `NEXT_PUBLIC_GISCUS_REPO`, `NEXT_PUBLIC_GISCUS_REPO_ID`,
+     `NEXT_PUBLIC_GISCUS_CATEGORY`, `NEXT_PUBLIC_GISCUS_CATEGORY_ID`
+
+  Kalau langkah ini dilewati, tab "Komentar via Google" akan menampilkan
+  pesan bahwa fitur belum diaktifkan — tidak akan error.
+
