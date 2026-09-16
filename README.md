@@ -7,7 +7,8 @@ Diary kreator konten AI bertema Persona 5, dibangun dengan Next.js + Supabase.
 ```
 app/
   page.js         -> halaman utama (/), merakit semua komponen
-  admin/page.js   -> halaman admin (/admin), form input log
+  admin/page.js   -> halaman admin (/admin), dibungkus AdminGate
+  api/check-password/route.js -> cek password admin di server
   layout.js       -> kerangka HTML dasar
   globals.css     -> semua styling visual
 components/
@@ -18,6 +19,8 @@ components/
   Calendar.js     -> kalender bulanan dengan navigasi
   Works.js        -> grid hasil karya + filter kategori
   Footer.js       -> footer
+  AdminGate.js    -> form login sebelum admin bisa diakses
+  AdminForm.js    -> form input log (isi asli halaman admin)
 lib/
   supabase.js     -> koneksi ke Supabase (satu tempat, dipakai di semua file)
   categories.js   -> label, warna, dan format tanggal kategori
@@ -40,14 +43,19 @@ npm install
 
 Ini akan membuat folder `node_modules` (jangan dihapus, jangan di-upload ke GitHub).
 
-### 3. Isi kredensial Supabase
+### 3. Isi kredensial Supabase dan password admin
 Salin file `.env.local.example` jadi `.env.local`, lalu isi dengan URL dan
-anon key project Supabase kamu (Project Settings > API di dashboard Supabase):
+anon key project Supabase kamu (Project Settings > API di dashboard Supabase),
+serta password bebas untuk melindungi halaman `/admin`:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_KEY=isi-anon-public-key-di-sini
+ADMIN_PASSWORD=ganti-dengan-password-rahasia-kamu
 ```
+
+Catatan: `ADMIN_PASSWORD` sengaja TIDAK diberi awalan `NEXT_PUBLIC_` supaya
+tidak pernah terkirim ke browser — hanya bisa dibaca di server lewat API route.
 
 ### 4. Jalankan di komputer sendiri (opsional, untuk coba-coba dulu)
 
@@ -67,6 +75,7 @@ Buka http://localhost:3000 di browser.
 - Sebelum klik Deploy, buka bagian "Environment Variables", tambahkan:
   - `NEXT_PUBLIC_SUPABASE_URL` = url project Supabase kamu
   - `NEXT_PUBLIC_SUPABASE_KEY` = anon key Supabase kamu
+  - `ADMIN_PASSWORD` = password bebas untuk melindungi halaman /admin
 - Klik Deploy
 
 Setelah selesai, situs online di alamat seperti `nama-project.vercel.app`,
