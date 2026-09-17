@@ -173,6 +173,24 @@ Halaman detail sekarang pakai layout dua kolom di layar lebar (desktop):
 konten utama di kiri, kotak like/dislike + share yang menempel (sticky) di
 kanan. Di tablet/HP otomatis berubah jadi satu kolom penuh.
 
+### SEO dan Open Graph
+- Setiap halaman detail karya sekarang punya judul, deskripsi, dan gambar
+  preview otomatis (diambil dari thumbnail karya tersebut) — jadi kalau
+  link-nya di-share ke WhatsApp/Twitter/Discord, tampilannya rapi dan
+  relevan, bukan cuma "REBEL LOG" generik.
+- `sitemap.xml` dan `robots.txt` dibuat otomatis (lihat `app/sitemap.js` dan
+  `app/robots.js`), membantu situs lebih mudah diindex Google.
+- **Penting:** isi `NEXT_PUBLIC_SITE_URL` di `.env.local` dan Environment
+  Variables Vercel dengan domain asli situsmu (tanpa garis miring di akhir),
+  supaya semua URL yang digenerate benar.
+- Taruh gambar `og-default.png` (1200x630px) di folder `public/` sebagai
+  gambar preview default untuk halaman yang belum punya thumbnail sendiri.
+
+### Halaman tag (bisa diklik)
+Tag di halaman detail sekarang bisa diklik, menuju halaman `/tags/[nama]`
+yang menampilkan semua karya dengan tag yang sama — seperti fitur tag di
+blog/WordPress pada umumnya.
+
 ### Gambar karakter di Hero
 Bagian hero (judul besar di awal halaman) sekarang punya slot gambar di sisi
 kanan. Taruh file gambar (PNG dengan background transparan disarankan) di

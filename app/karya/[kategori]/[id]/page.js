@@ -11,6 +11,45 @@ import CommentsTabs from '../../../../components/CommentsTabs';
 
 export const revalidate = 0;
 
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+export async function generateMetadata({ params }) {
+  const { data: item } = await sb
+    .from('logs')
+    .select('*')
+    .eq('id', params.id)
+    .single();
+
+  if (!item) {
+    return { title: 'Karya tidak ditemukan' };
+  }
+
+  const plainText = stripHtml(item.catatan_html || item.catatan);
+  const description = plainText.slice(0, 160) || CATEGORY_LABEL[item.kategori] || item.kategori;
+  const ogImage = item.url_thumbnail || '/og-default.png';
+
+  return {
+    title: item.judul,
+    description,
+    openGraph: {
+      title: item.judul,
+      description,
+      images: [{ url: ogImage }],
+      type: 'article',
+      publishedTime: item.date,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: item.judul,
+      description,
+      images: [ogImage],
+    },
+  };
+}
+
 export default async function KaryaDetailPage({ params }) {
   const { data: item, error } = await sb
     .from('logs')
@@ -70,7 +109,9 @@ export default async function KaryaDetailPage({ params }) {
             {tags.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.5rem' }}>
                 {tags.map((tag) => (
-                  <span key={tag} className="detail-tag-pill">#{tag}</span>
+                  <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`} className="detail-tag-pill">
+                    #{tag}
+                  </Link>
                 ))}
               </div>
             )}

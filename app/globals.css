@@ -489,6 +489,14 @@ section{ position: relative; padding: 6rem 6vw; z-index:2; }
   font-size: 0.8rem;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.detail-tag-pill:hover{
+  border-color: var(--red);
+  color: var(--red);
 }
 .detail-comments{
   max-width: 800px;
